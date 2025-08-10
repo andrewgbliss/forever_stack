@@ -1,0 +1,133 @@
+services:
+  # Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: forever_stack_postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - forever_stack_network
+    restart: unless-stopped
+    env_file: .env
+
+  # NextJS Frontend (Main application on port 80)
+  # nextjs:
+  #   env_file: .env
+  #   build:
+  #     context: ./nextjs/app
+  #     dockerfile: Dockerfile
+  #   container_name: forever_stack_nextjs
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - forever_stack_network
+  #   depends_on:
+  #     - postgres
+  #   restart: unless-stopped
+
+  # Perl Backend
+  # perl:
+  #   env_file: .env
+  #   build:
+  #     context: ./perl
+  #     dockerfile: Dockerfile
+  #   container_name: forever_stack_perl
+  #   ports:
+  #     - "5000:5000"
+  #   networks:
+  #     - forever_stack_network
+  #   depends_on:
+  #     - postgres
+  #   restart: unless-stopped
+
+  # PHP Backend
+  # php:
+  #   env_file: .env
+  #   build:
+  #     context: ./php
+  #     dockerfile: Dockerfile
+  #   container_name: forever_stack_php
+  #   ports:
+  #     - "8000:8000"
+  #   networks:
+  #     - forever_stack_network
+  #   depends_on:
+  #     - postgres
+  #   restart: unless-stopped
+
+  # # Java Backend
+  # java:
+  #   env_file: .env
+  #   build:
+  #     context: ./java
+  #     dockerfile: Dockerfile
+  #   container_name: forever_stack_java
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - forever_stack_network
+  #   depends_on:
+  #     - postgres
+  #   restart: unless-stopped
+
+  # # Go Backend
+  # go:
+  #   env_file: .env
+  #   build:
+  #     context: ./go
+  #     dockerfile: Dockerfile
+  #   container_name: forever_stack_go
+  #   ports:
+  #     - "8081:8081"
+  #   networks:
+  #     - forever_stack_network
+  #   depends_on:
+  #     - postgres
+  #   restart: unless-stopped
+
+  # # Ruby Backend
+  # ruby:
+  #   env_file: .env
+  #   build:
+  #     context: ./ruby
+  #     dockerfile: Dockerfile
+  #   container_name: forever_stack_ruby
+  #   ports:
+  #     - "3001:3001"
+  #   networks:
+  #     - forever_stack_network
+  #   depends_on:
+  #     - postgres
+  #   restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    env_file: .env
+    image: nginx:alpine
+    container_name: forever_stack_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    networks:
+      - forever_stack_network
+      # depends_on:
+      # - nextjs
+      # - perl
+      # - php
+      # - java
+      # - go
+      # - ruby
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+
+networks:
+  forever_stack_network:
+    driver: bridge

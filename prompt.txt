@@ -1,0 +1,46 @@
+Using the README.md file @README.md 
+Read this file
+FIrst make a docker-compose.yml file that the readme says to make.
+Make all the services and link them together with nginx.
+Make an .env file with the needs vars, and make a file called .sample.env for default values
+
+---
+
+Context:
+
+You'll need to create the following directory structure with Dockerfiles for each service:
+
+```
+.
+├── docker-compose.yml
+├── .env
+├── .sample.env
+├── nginx/
+│   └── nginx.conf
+├── nextjs/
+│   └── Dockerfile
+├── perl/
+│   └── Dockerfile
+├── php/
+│   └── Dockerfile
+├── java/
+│   └── Dockerfile
+├── go/
+│   └── Dockerfile
+└── ruby/
+    └── Dockerfile
+```
+
+Now create the folder for each service and their Dockerfile
+
+---
+
+Make a .gitignore to ignore any .env or build folders, .next
+
+---
+
+make the docker compose file use the .env
+
+---
+
+take off the env vars found in the file and use the .env file
