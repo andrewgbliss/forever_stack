@@ -1,4 +1,4 @@
-# Forever Stack 
+# Forever Stack
 
 A stack of everything, together, forever
 
@@ -13,12 +13,13 @@ A stack of everything, together, forever
 - Go Backend
 - Ruby Backend
 - Python Backend
+- Colfusion
 
 ```docker compose
 
 ```
 
-These will all tack to each other, they are all listening on different ports. 
+These will all tack to each other, they are all listening on different ports.
 You can make them public or internal in the docker compose: here is an example:
 
 ```docker compose
@@ -31,15 +32,6 @@ This will manage migrations, type safety, and a basic API exposed at /api.
 
 Each of the other services will be on different ports. Like the PERL api will be on localhost:5000
 
-### Localhost 
+### Localhost
 
 On port 80 will be the NextJs server rendering react.
-
-### Env
-
-```env
-DATABASE_URL=DATABASE_URL=postgresql://postgres:postgres@{domain name or ip}:{port}/postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_USER=postgres
-POSTGRES_DB=postgres
-```
