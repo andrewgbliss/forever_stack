@@ -15,14 +15,11 @@ A stack of everything, together, forever
 - Python Backend
 - Colfusion
 
-These will all tack to each other, they are all listening on different ports.
-You can make them public or internal in the docker compose: here is an example:
-
 ### Drizzle ORM
 
-This will manage migrations, type safety, and a basic API exposed at /api.
+This will manage migrations, type safety, and a basic API.
 
-Each of the other services will be on different ports. Like the PERL api will be on localhost:5000
+Each of the other services will be on different ports, however the nginx proxy will link them all under localhost.
 
 ### Localhost
 
