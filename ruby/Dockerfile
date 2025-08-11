@@ -27,5 +27,5 @@ RUN if [ -f "bin/rails" ]; then bundle exec rake assets:precompile; fi
 # Expose port
 EXPOSE 3001
 
-# Start the application
-CMD ["bundle", "exec", "rackup", "--host", "0.0.0.0", "--port", "3001"]
+# Start the application using Sinatra's built-in server
+CMD ["bundle", "exec", "ruby", "app.rb", "-o", "0.0.0.0", "-p", "3001"]

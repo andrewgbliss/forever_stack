@@ -7,49 +7,97 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app = AppFactory::create();
 
-// Database connection
-function getDb() {
-    $host = 'postgres';
-    $dbname = $_ENV['POSTGRES_DB'] ?? 'postgres';
-    $user = $_ENV['POSTGRES_USER'] ?? 'postgres';
-    $pass = $_ENV['POSTGRES_PASSWORD'] ?? 'postgres';
-    
-    return new PDO("pgsql:host=$host;dbname=$dbname", $user, $pass);
-}
+// Set base path for /php/ prefix
+$app->setBasePath('/php');
+
+// Add error middleware
+$app->addErrorMiddleware(true, true, true);
 
 // Routes
 $app->get('/', function (Request $request, Response $response) {
-    $data = ['message' => 'PHP API is running!', 'status' => 'ok'];
-    $response->getBody()->write(json_encode($data));
+    $data = [
+        'message' => 'PHP API is running!', 
+        'status' => 'ok',
+        'timestamp' => time(),
+        'service' => 'php-basic'
+    ];
+    $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
     return $response->withHeader('Content-Type', 'application/json');
 });
 
 $app->get('/health', function (Request $request, Response $response) {
-    $data = ['status' => 'healthy', 'service' => 'php'];
-    $response->getBody()->write(json_encode($data));
+    $data = [
+        'status' => 'healthy', 
+        'service' => 'php',
+        'uptime' => time()
+    ];
+    $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-$app->get('/users', function (Request $request, Response $response) {
-    $db = getDb();
-    $stmt = $db->query('SELECT * FROM users LIMIT 10');
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$app->get('/info', function (Request $request, Response $response) {
+    $data = [
+        'service' => 'PHP Basic API',
+        'version' => '1.0.0',
+        'description' => 'A simple PHP web application without database',
+        'endpoints' => ['/', '/health', '/info', '/echo', '/math/add', '/math/multiply', '/data'],
+        'modules' => 'Slim Framework only'
+    ];
+    $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
+$app->get('/echo', function (Request $request, Response $response) {
+    $queryParams = $request->getQueryParams();
+    $message = $queryParams['message'] ?? 'Hello World!';
     
-    $response->getBody()->write(json_encode(['users' => $users]));
+    $data = [
+        'echo' => $message,
+        'timestamp' => time()
+    ];
+    $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-$app->post('/users', function (Request $request, Response $response) {
+$app->get('/math/add', function (Request $request, Response $response) {
+    $queryParams = $request->getQueryParams();
+    $a = (int)($queryParams['a'] ?? 0);
+    $b = (int)($queryParams['b'] ?? 0);
+    
+    $data = [
+        'operation' => 'addition',
+        'a' => $a,
+        'b' => $b,
+        'result' => $a + $b
+    ];
+    $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
+$app->get('/math/multiply', function (Request $request, Response $response) {
+    $queryParams = $request->getQueryParams();
+    $a = (int)($queryParams['a'] ?? 1);
+    $b = (int)($queryParams['b'] ?? 1);
+    
+    $data = [
+        'operation' => 'multiplication',
+        'a' => $a,
+        'b' => $b,
+        'result' => $a * $b
+    ];
+    $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
+$app->post('/data', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
-    $name = $data['name'] ?? '';
-    $email = $data['email'] ?? '';
     
-    $db = getDb();
-    $stmt = $db->prepare('INSERT INTO users (name, email) VALUES (?, ?)');
-    $stmt->execute([$name, $email]);
-    
-    $result = ['message' => 'User created successfully', 'id' => $db->lastInsertId()];
-    $response->getBody()->write(json_encode($result));
+    $result = [
+        'received' => $data,
+        'processed' => time(),
+        'message' => 'Data received successfully'
+    ];
+    $response->getBody()->write(json_encode($result, JSON_PRETTY_PRINT));
     return $response->withHeader('Content-Type', 'application/json');
 });
 
