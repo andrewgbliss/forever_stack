@@ -15,16 +15,8 @@ A stack of everything, together, forever
 - Python Backend
 - Colfusion
 
-```docker compose
-
-```
-
 These will all tack to each other, they are all listening on different ports.
 You can make them public or internal in the docker compose: here is an example:
-
-```docker compose
-
-```
 
 ### Drizzle ORM
 
